@@ -1,5 +1,5 @@
-import 'package:encryptonator/environment.dart';
 import 'package:encryptonator/services/encryption_service.dart';
+import 'package:encryptonator/widgets/action_button_1.dart';
 import 'package:encryptonator/widgets/copiable_display.dart';
 import 'package:flutter/material.dart';
 
@@ -13,21 +13,13 @@ class EncryptScreen extends StatefulWidget {
 }
 
 class _EncryptScreenState extends State<EncryptScreen> {
-  late final EncryptionService encryptionService;
+  final EncryptionService encryptionService = EncryptionService();
 
   final TextEditingController controller = TextEditingController();
 
   bool inDisplayMode = false;
   String? encryptedBase64;
   String? ivBase64;
-
-  @override
-  void initState() {
-    super.initState();
-    encryptionService = EncryptionService();
-    print(Environment.encryptionKey);
-    encryptionService.init(Environment.encryptionKey);
-  }
 
   @override
   void dispose() {
@@ -80,30 +72,14 @@ class _EncryptScreenState extends State<EncryptScreen> {
                   ),
                   const SizedBox(height: 30),
                   !inDisplayMode
-                      ? MaterialButton(
-                          onPressed: _encryptText,
-                          color: Colors.purple,
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 14, vertical: 8),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: const Text(
-                            'Encrypt',
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.w600,
-                              color: Colors.white,
-                            ),
-                          ),
-                        )
+                      ? ActionButton1(text: 'Encrypt', onPressed: _encryptText)
                       : const SizedBox.shrink(),
                   const SizedBox(height: 50),
                 ],
               ),
             ),
           ),
-          const Divider(),
+          const Divider(color: Colors.purple),
           if (inDisplayMode && (encryptedBase64 != null && ivBase64 != null))
             Expanded(
               flex: 4,

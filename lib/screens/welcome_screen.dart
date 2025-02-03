@@ -1,10 +1,24 @@
+import 'package:encryptonator/environment.dart';
+import 'package:encryptonator/screens/decrypt_screen.dart';
 import 'package:encryptonator/screens/encrypt_screen.dart';
+import 'package:encryptonator/services/encryption_service.dart';
 import 'package:flutter/material.dart';
 
-class WelcomeScreen extends StatelessWidget {
+class WelcomeScreen extends StatefulWidget {
   static const screenId = 'welcome_screen';
 
   const WelcomeScreen({super.key});
+
+  @override
+  State<WelcomeScreen> createState() => _WelcomeScreenState();
+}
+
+class _WelcomeScreenState extends State<WelcomeScreen> {
+  @override
+  void initState() {
+    super.initState();
+    EncryptionService().init(Environment.encryptionKey);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -73,6 +87,6 @@ class WelcomeScreen extends StatelessWidget {
   }
 
   void _onDecryptPressed(BuildContext context) {
-    // Navigator.pushNamed(context, EncryptScreen.screenId);
+    Navigator.pushNamed(context, DecryptScreen.screenId);
   }
 }
