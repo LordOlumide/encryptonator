@@ -1,19 +1,19 @@
-import 'package:encryptonator/services/encryption_service.dart';
+import 'package:encryptonator/archive/aes_encryption_service.dart';
 import 'package:encryptonator/widgets/action_button_1.dart';
 import 'package:encryptonator/widgets/copiable_display.dart';
 import 'package:flutter/material.dart';
 
-class EncryptScreen extends StatefulWidget {
+class AESEncryptScreen extends StatefulWidget {
   static const screenId = 'home_screen';
 
-  const EncryptScreen({super.key});
+  const AESEncryptScreen({super.key});
 
   @override
-  State<EncryptScreen> createState() => _EncryptScreenState();
+  State<AESEncryptScreen> createState() => _AESEncryptScreenState();
 }
 
-class _EncryptScreenState extends State<EncryptScreen> {
-  final EncryptionService encryptionService = EncryptionService();
+class _AESEncryptScreenState extends State<AESEncryptScreen> {
+  final AESEncryptionService encryptionService = AESEncryptionService();
 
   final TextEditingController controller = TextEditingController();
 
@@ -34,7 +34,7 @@ class _EncryptScreenState extends State<EncryptScreen> {
         centerTitle: true,
         backgroundColor: Colors.purple,
         foregroundColor: Colors.white,
-        title: const Text('Encrypt-onator'),
+        title: const Text('AES Encryption'),
       ),
       body: Column(
         children: [

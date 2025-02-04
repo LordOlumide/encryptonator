@@ -1,41 +1,43 @@
-import 'package:encryptonator/services/encryption_service.dart';
+import 'package:encryptonator/services/custom_encryption_service.dart';
 import 'package:encryptonator/widgets/action_button_1.dart';
 import 'package:encryptonator/widgets/copiable_display.dart';
 import 'package:flutter/material.dart';
 
-class DecryptScreen extends StatefulWidget {
-  static const screenId = 'decrypt_screen';
+class CustomEncryptionScreen extends StatefulWidget {
+  static const String screenId = 'xor_screen';
 
-  const DecryptScreen({super.key});
+  final bool isEncryptNotDecrypt;
+
+  const CustomEncryptionScreen({super.key, required this.isEncryptNotDecrypt});
 
   @override
-  State<DecryptScreen> createState() => _DecryptScreenState();
+  State<CustomEncryptionScreen> createState() => _CustomEncryptionScreenState();
 }
 
-class _DecryptScreenState extends State<DecryptScreen> {
-  final EncryptionService encryptionService = EncryptionService();
-
-  final TextEditingController encryptedController = TextEditingController();
-  final TextEditingController ivController = TextEditingController();
+class _CustomEncryptionScreenState extends State<CustomEncryptionScreen> {
+  final TextEditingController textController = TextEditingController();
+  final TextEditingController keyController = TextEditingController();
 
   bool inDisplayMode = false;
-  String? decryptedText;
+  String? resultText;
 
   @override
   void dispose() {
-    encryptedController.dispose();
-    ivController.dispose();
+    textController.dispose();
+    keyController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    final bool isEncrypt = widget.isEncryptNotDecrypt;
+
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
         backgroundColor: Colors.purple,
         foregroundColor: Colors.white,
-        title: const Text('Encrypt-onator'),
+        title: Text('XOR ${isEncrypt ? 'Encryption' : 'Decryption'}'),
       ),
       body: Column(
         children: [
@@ -47,13 +49,15 @@ class _DecryptScreenState extends State<DecryptScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   const SizedBox(height: 15),
-                  const Text(
-                    'Enter the encrypted Base64 text for decryption here:',
-                    style: TextStyle(fontSize: 17),
+                  Text(
+                    isEncrypt
+                        ? 'Enter the plain text here:'
+                        : 'Enter the cipher text here:',
+                    style: const TextStyle(fontSize: 17),
                   ),
                   const SizedBox(height: 5),
                   TextField(
-                    controller: encryptedController,
+                    controller: textController,
                     maxLines: null,
                     decoration: InputDecoration(
                       border: OutlineInputBorder(
@@ -71,12 +75,12 @@ class _DecryptScreenState extends State<DecryptScreen> {
                   ),
                   const SizedBox(height: 30),
                   const Text(
-                    'Enter the Initialization Vector (IV) for decryption here:',
+                    'Enter the secret key here:',
                     style: TextStyle(fontSize: 17),
                   ),
                   const SizedBox(height: 5),
                   TextField(
-                    controller: ivController,
+                    controller: keyController,
                     maxLines: null,
                     decoration: InputDecoration(
                       border: OutlineInputBorder(
@@ -94,7 +98,10 @@ class _DecryptScreenState extends State<DecryptScreen> {
                   ),
                   const SizedBox(height: 30),
                   !inDisplayMode
-                      ? ActionButton1(text: 'Decrypt', onPressed: _decryptText)
+                      ? ActionButton1(
+                          text: isEncrypt ? 'Encrypt' : 'Decrypt',
+                          onPressed: _convertText,
+                        )
                       : const SizedBox.shrink(),
                   const SizedBox(height: 50),
                 ],
@@ -102,7 +109,7 @@ class _DecryptScreenState extends State<DecryptScreen> {
             ),
           ),
           const Divider(color: Colors.purple),
-          if (inDisplayMode && decryptedText != null)
+          if (inDisplayMode && resultText != null)
             Expanded(
               flex: 3,
               child: SingleChildScrollView(
@@ -110,12 +117,12 @@ class _DecryptScreenState extends State<DecryptScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     const SizedBox(height: 20),
-                    const Text(
-                      'Decrypted text:',
-                      style: TextStyle(fontSize: 17),
+                    Text(
+                      isEncrypt ? 'Encrypted text:' : 'Decrypted text:',
+                      style: const TextStyle(fontSize: 17),
                     ),
                     const SizedBox(height: 10),
-                    CopiableDisplay(text: decryptedText!),
+                    CopiableDisplay(text: resultText!),
                     const SizedBox(height: 30),
                   ],
                 ),
@@ -128,19 +135,27 @@ class _DecryptScreenState extends State<DecryptScreen> {
     );
   }
 
-  void _decryptText() {
+  void _convertText() {
     setState(() {
-      decryptedText = encryptionService.decryptData(
-        encryptedBase64: encryptedController.text,
-        ivBase64: ivController.text,
-      );
+      if (widget.isEncryptNotDecrypt) {
+        resultText = CustomEncryptionService.encrypt(
+          data: textController.text,
+          secret: keyController.text,
+        );
+      } else {
+        resultText = CustomEncryptionService.decrypt(
+          data: textController.text,
+          secret: keyController.text,
+        );
+      }
+      print(resultText);
       inDisplayMode = true;
     });
   }
 
   void _deactivateDisplayMode() {
     setState(() {
-      decryptedText = null;
+      resultText = null;
       inDisplayMode = false;
     });
   }

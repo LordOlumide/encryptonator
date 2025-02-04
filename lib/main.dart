@@ -1,5 +1,4 @@
-import 'package:encryptonator/screens/decrypt_screen.dart';
-import 'package:encryptonator/screens/encrypt_screen.dart';
+import 'package:encryptonator/screens/encryption_screen.dart';
 import 'package:encryptonator/screens/welcome_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -19,8 +18,13 @@ class MyApp extends StatelessWidget {
       ),
       routes: {
         WelcomeScreen.screenId: (context) => const WelcomeScreen(),
-        EncryptScreen.screenId: (context) => const EncryptScreen(),
-        DecryptScreen.screenId: (context) => const DecryptScreen(),
+        CustomEncryptionScreen.screenId: (context) {
+          final args = ModalRoute.of(context)!.settings.arguments
+              as Map<String, dynamic>;
+
+          return CustomEncryptionScreen(
+              isEncryptNotDecrypt: args['isEncryptNotDecrypt']);
+        },
       },
       initialRoute: WelcomeScreen.screenId,
     );

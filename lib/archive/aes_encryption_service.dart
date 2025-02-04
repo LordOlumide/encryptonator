@@ -1,11 +1,12 @@
 import 'package:encrypt/encrypt.dart' as encrypt;
 
-class EncryptionService {
-  static final EncryptionService _instance = EncryptionService._internal();
+class AESEncryptionService {
+  static final AESEncryptionService _instance =
+      AESEncryptionService._internal();
 
-  EncryptionService._internal();
+  AESEncryptionService._internal();
 
-  factory EncryptionService() {
+  factory AESEncryptionService() {
     return _instance;
   }
 

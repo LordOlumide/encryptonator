@@ -11,7 +11,7 @@ class ActionButton1 extends StatelessWidget {
     return MaterialButton(
       onPressed: onPressed,
       color: Colors.purple,
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+      padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 8),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       child: Text(
         text,

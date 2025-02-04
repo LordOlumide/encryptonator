@@ -1,7 +1,5 @@
-import 'package:encryptonator/environment.dart';
-import 'package:encryptonator/screens/decrypt_screen.dart';
-import 'package:encryptonator/screens/encrypt_screen.dart';
-import 'package:encryptonator/services/encryption_service.dart';
+import 'package:encryptonator/screens/encryption_screen.dart';
+import 'package:encryptonator/widgets/action_button_1.dart';
 import 'package:flutter/material.dart';
 
 class WelcomeScreen extends StatefulWidget {
@@ -15,12 +13,6 @@ class WelcomeScreen extends StatefulWidget {
 
 class _WelcomeScreenState extends State<WelcomeScreen> {
   @override
-  void initState() {
-    super.initState();
-    EncryptionService().init(Environment.encryptionKey);
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
@@ -29,50 +21,35 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Text(
-                'Welcome to the Encrypt-onator',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 35,
-                  fontWeight: FontWeight.w700,
-                  color: Colors.purple,
-                ),
-              ),
-              const SizedBox(height: 50),
-              MaterialButton(
-                onPressed: () => _onEncryptPressed(context),
-                color: Colors.purple,
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: const Text(
-                  'Encrypt Text',
+              const Align(
+                alignment: Alignment.center,
+                child: Text(
+                  'Welcome to the Encrypt-onator',
+                  textAlign: TextAlign.center,
                   style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.white,
+                    fontSize: 35,
+                    fontWeight: FontWeight.w700,
+                    color: Colors.purple,
                   ),
                 ),
               ),
               const SizedBox(height: 30),
-              MaterialButton(
-                onPressed: () => _onDecryptPressed(context),
-                color: Colors.purple,
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
+              const Text(
+                'XOR Cipher',
+                style: TextStyle(
+                  fontSize: 23,
+                  fontWeight: FontWeight.w500,
                 ),
-                child: const Text(
-                  'Decrypt Text',
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.white,
-                  ),
-                ),
+              ),
+              const SizedBox(height: 15),
+              ActionButton1(
+                text: 'Encrypt Text',
+                onPressed: () => _onXOREncryptPressed(context, true),
+              ),
+              const SizedBox(height: 15),
+              ActionButton1(
+                text: 'Decrypt Text',
+                onPressed: () => _onXOREncryptPressed(context, false),
               ),
               const SizedBox(height: 30),
             ],
@@ -82,11 +59,11 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     );
   }
 
-  void _onEncryptPressed(BuildContext context) {
-    Navigator.pushNamed(context, EncryptScreen.screenId);
-  }
-
-  void _onDecryptPressed(BuildContext context) {
-    Navigator.pushNamed(context, DecryptScreen.screenId);
+  void _onXOREncryptPressed(BuildContext context, bool isEncryptNotDecrypt) {
+    Navigator.pushNamed(
+      context,
+      CustomEncryptionScreen.screenId,
+      arguments: {'isEncryptNotDecrypt': isEncryptNotDecrypt},
+    );
   }
 }
